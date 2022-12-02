@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.upload.mapper.LogmsgMapper">
+
+    <resultMap id="BaseResultMap" type="com.example.upload.entity.Logmsg">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="timeDate" column="TimeDate" jdbcType="VARCHAR"/>
+            <result property="num" column="num" jdbcType="VARCHAR"/>
+            <result property="code" column="code" jdbcType="VARCHAR"/>
+            <result property="msg" column="msg" jdbcType="NVARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,code,TimeDate,num,
+        msg
+    </sql>
+    <insert id="insertMsg">
+        insert into logMsg
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+             <if test="code != null and code !='' ">
+             code,
+             </if>
+            TimeDate,
+            num,
+            msg
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="code != null and code !='' ">
+                #{code},
+            </if>
+            <if test="timeDate != null and timeDate !='' ">
+                #{timeDate},
+            </if>
+            <if test="num != null and num !='' ">
+                #{num},
+            </if>
+            <if test="msg != null and msg !='' ">
+                #{msg}
+            </if>
+        </trim>
+    </insert>
+</mapper>
