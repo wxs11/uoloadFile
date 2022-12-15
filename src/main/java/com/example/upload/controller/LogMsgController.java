@@ -1,8 +1,6 @@
 package com.example.upload.controller;
 
-import com.example.upload.entity.ResultVO;
 import com.example.upload.service.LogmsgService;
-import com.example.upload.util.ResultUtil;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,13 +26,8 @@ public class LogMsgController {
      * @return: com.example.upload.entity.ResultVO
      **/
     @PostMapping("/upload")
-    public ResultVO insert(){
-        boolean res = logmsgService.insertMsg();
-        if (res) {
-            return ResultUtil.success("保存成功！");
-        }
-        return ResultUtil.error();
-
+    public void insert(){
+        logmsgService.insertMsg();
     }
 
 

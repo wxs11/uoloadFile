@@ -13,9 +13,11 @@ import java.util.List;
 */
 public interface ReadhistoryMapper extends BaseMapper<Readhistory> {
 
-    List<String> selectAll();
+    List<String> selectAllFileNames();
 
     void saveFileName(String fileName);
+
+
 }
 
 

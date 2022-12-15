@@ -22,14 +22,15 @@ public class ReadhistoryServiceImpl extends ServiceImpl<ReadhistoryMapper, Readh
     ReadhistoryMapper readhistoryMapper;
 
     @Override
-    public List<String> selectAll() {
-        return readhistoryMapper.selectAll();
+    public List<String> selectAllFileNames() {
+        return readhistoryMapper.selectAllFileNames();
     }
 
     @Override
     public void saveFileName(String fileName) {
         readhistoryMapper.saveFileName(fileName);
     }
+
 }
 
 

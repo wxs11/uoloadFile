@@ -81,7 +81,12 @@
             <groupId>org.freemarker</groupId>
             <artifactId>freemarker</artifactId>
         </dependency>
-
+        <!-- 导入文件处理器，加上这个，以后编写配置就有提示了-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId> spring-boot-configuration-processor</artifactId>
+            <optional> true </optional>
+        </dependency>
 <!--        生成api文档-->
         <dependency>
             <groupId>io.github.yedaxia</groupId>

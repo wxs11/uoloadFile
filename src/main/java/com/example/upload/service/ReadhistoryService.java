@@ -18,7 +18,7 @@ public interface ReadhistoryService extends IService<Readhistory> {
      * @param: []
      * @return: java.util.List<com.example.upload.entity.Readhistory>
      **/
-   List<String> selectAll();
+   List<String> selectAllFileNames();
 
    /**
     * description: 保存读取文件记录
@@ -27,4 +27,5 @@ public interface ReadhistoryService extends IService<Readhistory> {
     * @return: void
     **/
     void saveFileName(String fileName);
+
 }

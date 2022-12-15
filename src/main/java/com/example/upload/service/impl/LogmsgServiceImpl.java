@@ -31,9 +31,12 @@ public class LogmsgServiceImpl extends ServiceImpl<LogmsgMapper, Logmsg>
     @Resource
     private SqlSessionTemplate sqlSessionTemplate;
 
+    @Resource
+    LogmsgMapper logmsgMapper;
+
     @Scheduled(cron = "0 10 8 * * ?")
     @Override
-    public boolean insertMsg() {
+    public void insertMsg() {
         /*1.手动提交 所以是false*/
         SqlSession session = sqlSessionTemplate.getSqlSessionFactory().openSession(
                 ExecutorType.BATCH, false);
@@ -41,42 +44,48 @@ public class LogmsgServiceImpl extends ServiceImpl<LogmsgMapper, Logmsg>
         LogmsgMapper tm = session.getMapper(LogmsgMapper.class);
         try {
             /*3.获取文件目录地址*/
-            String url = "D:/test/";
+            String url = "D:/test";
             /*4.将文件存入集合 工具类 ReadTxt.txt2String(file)*/
             TimeInterval timer1 = DateUtil.timer();
             List<Logmsg> al = ReadFile.getFiles(url);
-            System.out.println("读取" + al.size() + "条数据耗时" + timer1.interval());
-            /*5.每次1000条 共 size次*/
-            int size = al.size() / 1000;
-            //计算插入数据时间
-            TimeInterval timer = DateUtil.timer();
-            timer.start("1");
-            for (int i = 1; i <= size + 1; i++) {
-                timer.start("2");
-                /*6.遍历每条插入到数据库 例如 i 3 插入3000 到4000条 */
-                for (int k = (i - 1) * 1000; k < i * 1000 && k < al.size(); k++) {
-                    tm.insertMsg(al.get(k));
+            if (al.size() ==0) {
+                System.out.println("没有新增数据"+ "\n读取消耗时间"+timer1.interval());
+            }else {
+                System.out.println("读取" + al.size() + "条数据耗时" + timer1.interval());
+                /*5.每次1000条 共 size次*/
+                int size = al.size() / 1000;
+                //计算插入数据时间
+                TimeInterval timer = DateUtil.timer();
+                timer.start("1");
+                for (int i = 1; i <= size + 1; i++) {
+                    timer.start("2");
+                    /*6.遍历每条插入到数据库 例如 i 3 插入3000 到4000条 */
+                    for (int k = (i - 1) * 1000; k < i * 1000 && k < al.size(); k++) {
+                        tm.insertMsg(al.get(k));
+                    }
+                    //手动每1000个一提交，提交后无法回滚
+                    session.commit();
+                    //清理缓存，防止溢出
+                    session.clearCache();
+                    System.out.println("第" + i + "次耗时：" + (timer.intervalMs("2")) + "ms");
                 }
-                //手动每1000个一提交，提交后无法回滚
-                session.commit();
-                //清理缓存，防止溢出
-                session.clearCache();
-                System.out.println("第" + i + "次耗时：" + (timer.intervalMs("2")) + "ms");
+                System.out.println("插入" + al.size() + "条数据总耗时" + timer.intervalMs("1") + "ms");
             }
-            System.out.println("插入" + al.size() + "条数据总耗时" + timer.intervalMs("1") + "ms");
+
         } catch (Exception e) {
             //没有提交的数据可以回滚
             session.rollback();
             System.out.println("读取文件内容出错");
             e.printStackTrace();
-            return false;
         } finally {
             session.close();
         }
-        return true;
     }
 
-
+    @Override
+    public List<String> selectTimeDate(String timeDate, String msg) {
+        return logmsgMapper.selectTimeDate(timeDate, msg);
+    }
 
 
 }

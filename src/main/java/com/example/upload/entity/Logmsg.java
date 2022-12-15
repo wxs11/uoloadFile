@@ -28,6 +28,7 @@ public class Logmsg implements Serializable {
     /**
      * 时间
      */
+    @TableField("timeDate")
     private String timeDate;
 
     /**

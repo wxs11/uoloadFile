@@ -13,10 +13,12 @@
         id, fileNames
     </sql>
 
-    <select id="selectAll" resultType="java.lang.String">
+    <select id="selectAllFileNames" resultType="java.lang.String">
         select fileNames
         from readHistory
     </select>
+
+
 
     <insert id="saveFileName">
         insert into readHistory(fileNames)

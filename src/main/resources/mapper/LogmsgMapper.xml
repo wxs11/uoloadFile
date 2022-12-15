@@ -6,14 +6,14 @@
 
     <resultMap id="BaseResultMap" type="com.example.upload.entity.Logmsg">
             <id property="id" column="id" jdbcType="INTEGER"/>
-            <result property="timeDate" column="TimeDate" jdbcType="VARCHAR"/>
+            <result property="timeDate" column="timeDate" jdbcType="VARCHAR"/>
             <result property="num" column="num" jdbcType="VARCHAR"/>
             <result property="code" column="code" jdbcType="VARCHAR"/>
             <result property="msg" column="msg" jdbcType="NVARCHAR"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,code,TimeDate,num,
+        id,code,timeDate,num,
         msg
     </sql>
     <insert id="insertMsg">
@@ -22,7 +22,7 @@
              <if test="code != null and code !='' ">
              code,
              </if>
-            TimeDate,
+            timeDate,
             num,
             msg
         </trim>
@@ -42,4 +42,13 @@
             </if>
         </trim>
     </insert>
+
+    <select id="selectTimeDate" resultType="java.lang.String">
+        select timeDate,num,msg
+        from logMsg
+        <where>
+            timeDate = #{timeDate}
+            and msg = #{msg}
+        </where>
+    </select>
 </mapper>
