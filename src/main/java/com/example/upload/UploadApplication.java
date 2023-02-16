@@ -7,6 +7,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
  * 开启定时任务注解
+ * @author xiaoshuai.wei
  */
 @EnableScheduling
 @SpringBootApplication

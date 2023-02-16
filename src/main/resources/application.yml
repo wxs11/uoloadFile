@@ -3,13 +3,21 @@ server:
 spring:
   datasource:
 
-#    sqlServer
+#    sqlServer 测试
+#    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+#    url: jdbc:sqlserver://172.16.18.63:1433;databaseName=UPLOAD;trustServerCertificate=true
+#    username: sa
+#    password: Root1234
+
+#    sqlServer 苏州 172.16.11.222/sa/img*ma143
     driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
-    url: jdbc:sqlserver://172.16.18.63:1433;databaseName=UPLOAD;trustServerCertificate=true
+    url: jdbc:sqlserver://172.16.11.222:1433;databaseName=MACHINE_LOG;trustServerCertificate=true;rewriteBatchedStatements=true
     username: sa
-    password: Root1234
+    password: img*ma143
     hikari:
-#      max-lifetime: 50000
+      max-lifetime: 50000
+      #空闲连接超时时长
+      idle-timeout: 60000
       #最小空闲连接数
       minimum-idle: 10
       # 连接池最大连接数，默认是10

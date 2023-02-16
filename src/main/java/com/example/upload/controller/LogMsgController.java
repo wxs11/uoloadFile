@@ -1,6 +1,6 @@
 package com.example.upload.controller;
 
-import com.example.upload.service.LogmsgService;
+import com.example.upload.service.AtipRoutMachineLogDataService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,8 +15,10 @@ import javax.annotation.Resource;
 @RestController
 @RequestMapping("/test")
 public class LogMsgController {
+
+
     @Resource
-    LogmsgService logmsgService;
+    AtipRoutMachineLogDataService logDataService;
 
 
     /**
@@ -27,7 +29,7 @@ public class LogMsgController {
      **/
     @PostMapping("/upload")
     public void insert(){
-        logmsgService.insertMsg();
+        logDataService.insertLogMsg();
     }
 
 
