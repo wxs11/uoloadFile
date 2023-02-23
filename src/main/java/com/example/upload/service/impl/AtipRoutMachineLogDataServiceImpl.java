@@ -116,7 +116,7 @@ public class AtipRoutMachineLogDataServiceImpl extends ServiceImpl<AtipRoutMachi
             System.out.println("插入" + sumCount + "条数据总耗时" + timer.intervalMs("1") + "ms");
 
             //发送邮件
-            String to = null;
+            String to = new String();
             String title = "机器错误日志信息";
             Context context = new Context();
             //获取邮件地址
