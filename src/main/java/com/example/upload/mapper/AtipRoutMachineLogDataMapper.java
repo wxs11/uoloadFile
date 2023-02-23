@@ -45,12 +45,36 @@ public interface AtipRoutMachineLogDataMapper extends BaseMapper<AtipRoutMachine
     boolean insertEndMsg(AtipRoutMachineLogData atipRoutMachineLogData);
 
     /**
+     * description:插入Eroor Log信息
+     * @date: 2023/2/17
+     * @param: [logData]
+     * @return: boolean
+     **/
+    boolean insertErrorMsg(AtipRoutMachineLogData logData);
+
+    /**
      * description:查询对比表数据
      * @date: 2023/2/7
      * @param: [date, time, msg]
      * @return: java.util.List<java.lang.String>
      **/
     List<String> selectCheckMsg(String date,String time,String msg,String fileName);
+
+    /**
+     * description: 查询邮件发送内容
+     * @date: 2023/2/23
+     * @param: [date, time, msg, fileName]
+     * @return: java.util.List<java.lang.String>
+     **/
+    List<AtipRoutMachineLogData> selectEmailMsg();
+
+    /**
+     * description: 查询邮件地址
+     * @date: 2023/2/23
+     * @param: []
+     * @return: java.util.List<java.lang.String>
+     **/
+    List<String> selectEmailAdress();
 }
 
 

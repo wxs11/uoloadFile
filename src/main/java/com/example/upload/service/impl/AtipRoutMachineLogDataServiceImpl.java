@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.upload.entity.AtipRoutMachineLogData;
 import com.example.upload.mapper.AtipRoutMachineLogDataMapper;
 import com.example.upload.service.AtipRoutMachineLogDataService;
+import com.example.upload.util.EmailUtil;
 import com.example.upload.util.ReadFile;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
@@ -14,10 +15,13 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.spring5.SpringTemplateEngine;
 
 import javax.annotation.Resource;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -34,6 +38,11 @@ public class AtipRoutMachineLogDataServiceImpl extends ServiceImpl<AtipRoutMachi
     private SqlSessionTemplate sqlSessionTemplate;
 
     @Resource
+    EmailUtil emailUtil;
+    @Resource
+    SpringTemplateEngine springTemplateEngine;
+
+    @Resource
     private AtipRoutMachineLogDataMapper logDataMapper;
     /**
      * description: 记录方法运行次数
@@ -41,7 +50,7 @@ public class AtipRoutMachineLogDataServiceImpl extends ServiceImpl<AtipRoutMachi
     public static int count =0;
 
 
-    @Scheduled(cron = "0 46 14 1/1 * ? ")
+    @Scheduled(cron = "0 0 2,13 1/1 * ? ")
     @Override
     public void insertLogMsg() {
         /*1.手动提交 所以是false*/
@@ -56,7 +65,7 @@ public class AtipRoutMachineLogDataServiceImpl extends ServiceImpl<AtipRoutMachi
         try {
             count++;
             /*3.获取文件目录地址*/
-//            String url = "D:/test/old";
+//            String url = "D:/test/pro";
 //            String url = "D:/fileTest";
             String url = "\\\\172.16.9.121\\file3$\\share\\19 routdata";
             /*4.将文件存入集合 工具类 ReadTxt.txt2String(file)*/
@@ -91,6 +100,7 @@ public class AtipRoutMachineLogDataServiceImpl extends ServiceImpl<AtipRoutMachi
                             /*6.遍历每条插入到数据库 例如 i 3 插入3000 到4000条 */
                             for (int k = (i - 1) * 1000; k < i * 1000 && k < al.size(); k++) {
                                 tm.insertLogMsg(al.get(k));
+
                             }
                             //手动每1000个一提交，提交后无法回滚
                             session.commit();
@@ -104,6 +114,31 @@ public class AtipRoutMachineLogDataServiceImpl extends ServiceImpl<AtipRoutMachi
                 }
             }
             System.out.println("插入" + sumCount + "条数据总耗时" + timer.intervalMs("1") + "ms");
+
+            //发送邮件
+            String to = null;
+            String title = "机器错误日志信息";
+            Context context = new Context();
+            //获取邮件地址
+            List<String> adress = logDataMapper.selectEmailAdress();
+            for (String i: adress) {
+                to =to + i+",";
+            }
+            assert to != null;
+// 获取当前时间字符串，yyyy-MM-dd HH:mm:ss
+            String now = DateUtil.now();
+            Date date = DateUtil.parse(now);
+//一天的开始 00:00:00
+            Date beginOfDay = DateUtil.beginOfDay(date);
+//一天的结束 23:59:59
+            Date endOfDay = DateUtil.endOfDay(date);
+            List<AtipRoutMachineLogData> errorEmail = logDataMapper.selectEmailMsg();
+            context.setVariable("infoList",errorEmail);
+            context.setVariable("startTime",beginOfDay);
+            context.setVariable("endTime",endOfDay);
+            String tempContext = springTemplateEngine.process("mail.html", context);
+
+            emailUtil.sendHtmlMail(to,title,tempContext);
         } catch (Exception e) {
             //没有提交的数据可以回滚
             e.printStackTrace();
@@ -129,6 +164,21 @@ public class AtipRoutMachineLogDataServiceImpl extends ServiceImpl<AtipRoutMachi
     @Override
     public boolean insertEndMsg(AtipRoutMachineLogData atipRoutMachineLogData) {
         return logDataMapper.insertEndMsg(atipRoutMachineLogData);
+    }
+
+    @Override
+    public boolean insertErrorMsg(AtipRoutMachineLogData atipRoutMachineLogData) {
+        return logDataMapper.insertErrorMsg(atipRoutMachineLogData);
+    }
+
+    @Override
+    public List<AtipRoutMachineLogData> selectEmailMsg() {
+        return logDataMapper.selectEmailMsg();
+    }
+
+    @Override
+    public List<String> selectEmailAdress() {
+        return logDataMapper.selectEmailAdress();
     }
 
 

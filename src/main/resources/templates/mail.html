@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.themeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        th,table,td {border:1px solid black}
+        /*table{*/
+        /*    border-collapse: collapse;*/
+        /*    border-spacing: 0;*/
+        /*}*/
+    </style>
+</head>
+
+<body>
+
+日期<span th:text=${startTime} />到<span th:text=${endTime} />之间Error数据
+<div>
+<table>
+    <tr>
+        <th>序号</th>
+        <th>日期</th>
+        <th>时间</th>
+        <th>信息</th>
+        <th>创建时间</th>
+        <th>所属文件</th>
+    </tr>
+    <tr th:each="info:${infoList}">
+        <td th:text="${info.id}"></td>
+        <td th:text="${info.date}"></td>
+        <td th:text="${info.time}"></td>
+        <td th:text="${info.msg}"></td>
+        <td th:text="${info.createTime}"></td>
+        <td th:text="${info.fileName}"></td>
+    </tr>
+</table>
+</div>
+<div style="font-size: 20px;" >
+    本邮件由电子记录系统自动发出,请勿回复此邮件
+</div>
+</body>
+</html>

@@ -42,6 +42,23 @@ public interface AtipRoutMachineLogDataService extends IService<AtipRoutMachineL
      * @return: boolean
      **/
     boolean insertEndMsg(AtipRoutMachineLogData atipRoutMachineLogData);
+    /**
+     * description: 插入Error信息
+     * @date: 2023/2/17
+     * @param: [atipRoutMachineLogData]
+     * @return: boolean
+     **/
+    boolean insertErrorMsg(AtipRoutMachineLogData atipRoutMachineLogData);
+
+    /**
+     * description: 查询邮件发送内容
+     * @date: 2023/2/23
+     * @param: [date, time, msg, fileName]
+     * @return: java.util.List<java.lang.String>
+     **/
+    List<AtipRoutMachineLogData> selectEmailMsg();
+
+    List<String> selectEmailAdress();
 
 
 }

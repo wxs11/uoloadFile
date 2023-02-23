@@ -94,6 +94,16 @@ public class ReadFile {
                         String time = timeDate[1];
                         //获取日志num
                         String num = res[1];
+                        //检查是否是错误信息
+                        if (msg.contains("CHECK FOR BBD TOOL") || msg.contains("BBD CHANGE TOOL") || msg.contains("TOOL BROKEN Z(X)")
+                                ||msg.contains("TOOL BROKEN WHEN PUT TOOL") || msg.indexOf("断刀")==0) {
+                            AtipRoutMachineLogData errorMsg = new AtipRoutMachineLogData();
+                            errorMsg.setFileName(fileName);
+                            errorMsg.setDate(date);
+                            errorMsg.setTime(time);
+                            errorMsg.setMsg(msg);
+                            readFile.logDataService.insertErrorMsg(errorMsg);
+                        }
                         check = checkLine(count,fileName, date, fileCount, time, msg, check);
                         //不存在则加入新增列表中
                         if (check.isEmpty()) {
@@ -218,13 +228,10 @@ public class ReadFile {
                                     logData.setDate(filePrefix);
                                     logData.setTime(time);
                                     logData.setMsg(msg);
-                                    resList.add(logData);
                                     logData.setFileName(fileName);
+                                    resList.add(logData);
                                 }
-
-
                             }
-
                         }
                     } catch (Exception e) {
                         e.printStackTrace();

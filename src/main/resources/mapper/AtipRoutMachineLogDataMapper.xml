@@ -105,9 +105,13 @@
         </where>
     </select>
 
-
     <insert id="insertEndMsg">
         insert into ATIP_ROUT_MACHINE_LOG_DATA_CHECK(date, time, msg,FILENAME)
+        values (#{date},#{time},#{msg},#{fileName})
+    </insert>
+
+    <insert id="insertErrorMsg">
+        insert into ATIP_ROUT_MACHINE_LOG_DATA_ERROR(date, time, msg,FILENAME)
         values (#{date},#{time},#{msg},#{fileName})
     </insert>
 
@@ -119,5 +123,14 @@
             and MSG = #{msg}
             and FILENAME = #{fileName}
         </where>
+    </select>
+    <select id="selectEmailMsg" resultMap="BaseResultMap"  parameterType="java.lang.String"  >
+        select * from ATIP_ROUT_MACHINE_LOG_DATA_ERROR
+        <where>
+             CREATETIME between DATEADD(hh, -50, GETDATE()) AND GETDATE()
+        </where>
+    </select>
+    <select id="selectEmailAdress" resultType="java.lang.String">
+        select EMAIL from ATIP_ROUT_MACHINE_LOG_DATA_EMAIL
     </select>
 </mapper>
