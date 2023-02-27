@@ -34,23 +34,20 @@ import java.util.List;
 public class AtipRoutMachineLogDataServiceImpl extends ServiceImpl<AtipRoutMachineLogDataMapper, AtipRoutMachineLogData>
         implements AtipRoutMachineLogDataService {
 
-    @Resource
-    private SqlSessionTemplate sqlSessionTemplate;
-
+    /**
+     * description: 记录方法运行次数
+     **/
+    public static int count = 0;
     @Resource
     EmailUtil emailUtil;
     @Resource
     SpringTemplateEngine springTemplateEngine;
-
+    @Resource
+    private SqlSessionTemplate sqlSessionTemplate;
     @Resource
     private AtipRoutMachineLogDataMapper logDataMapper;
-    /**
-     * description: 记录方法运行次数
-     **/
-    public static int count =0;
 
-
-    @Scheduled(cron = "0 0 2,13 1/1 * ? ")
+    @Scheduled(cron = "0 0 2,15 1/1 * ? ")
     @Override
     public void insertLogMsg() {
         /*1.手动提交 所以是false*/
@@ -88,12 +85,12 @@ public class AtipRoutMachineLogDataServiceImpl extends ServiceImpl<AtipRoutMachi
                 //        通过循环读取每一个文件
                 assert fileList != null;
                 for (File fe : fileList) {
-                    fileName = "文件夹"+file1.getName()+"-"+fe.getName();
-                    List<AtipRoutMachineLogData> al = ReadFile.getFiles(fe, resList,count,fileName);
+                    fileName = "文件夹" + file1.getName() + "-" + fe.getName();
+                    List<AtipRoutMachineLogData> al = ReadFile.getFiles(fe, resList, count, fileName);
                     if (al.size() == 0) {
                         System.out.println("文件" + fileName + "没有新增数据" + "\n读取文件消耗时间" + timer1.interval());
                     } else {
-                        System.out.println("文件"+fileName+"有新增数据，读取" + al.size() + "条数据耗时:" + timer1.interval());
+                        System.out.println("文件" + fileName + "有新增数据，读取" + al.size() + "条数据耗时:" + timer1.interval());
                         /*5.每次1000条 共 size次*/
                         int size = al.size() / 1000;
                         for (int i = 1; i <= size + 1; i++) {
@@ -121,44 +118,42 @@ public class AtipRoutMachineLogDataServiceImpl extends ServiceImpl<AtipRoutMachi
             Context context = new Context();
             //获取邮件地址
             List<String> adress = logDataMapper.selectEmailAdress();
-            for (String i: adress) {
-                to =to + i+",";
+            assert adress != null;
+            for (String i : adress) {
+                to = to + i + ",";
             }
-            assert to != null;
-// 获取当前时间字符串，yyyy-MM-dd HH:mm:ss
+            // 获取当前时间字符串，yyyy-MM-dd HH:mm:ss
             String now = DateUtil.now();
             Date date = DateUtil.parse(now);
-//一天的开始 00:00:00
+            //一天的开始 00:00:00
             Date beginOfDay = DateUtil.beginOfDay(date);
-//一天的结束 23:59:59
+            //一天的结束 23:59:59
             Date endOfDay = DateUtil.endOfDay(date);
             List<AtipRoutMachineLogData> errorEmail = logDataMapper.selectEmailMsg();
-            context.setVariable("infoList",errorEmail);
-            context.setVariable("startTime",beginOfDay);
-            context.setVariable("endTime",endOfDay);
+            assert errorEmail != null;
+            context.setVariable("infoList", errorEmail);
+            context.setVariable("startTime", beginOfDay);
+            context.setVariable("endTime", endOfDay);
             String tempContext = springTemplateEngine.process("mail.html", context);
-
-            emailUtil.sendHtmlMail(to,title,tempContext);
+            emailUtil.sendHtmlMail(to, title, tempContext);
         } catch (Exception e) {
             //没有提交的数据可以回滚
             e.printStackTrace();
             session.rollback();
             System.out.println("读取文件" + fileName + "内容出错");
-
         } finally {
             session.close();
-
         }
     }
 
     @Override
     public List<String> selectMsg(String date, String time, String msg) {
-        return logDataMapper.selectMsg(date,time,msg);
+        return logDataMapper.selectMsg(date, time, msg);
     }
 
     @Override
-    public List<String> selectCheckMsg(String date, String time, String msg,String fileName) {
-        return logDataMapper.selectCheckMsg(date, time, msg,fileName);
+    public List<String> selectCheckMsg(String date, String time, String msg, String fileName) {
+        return logDataMapper.selectCheckMsg(date, time, msg, fileName);
     }
 
     @Override

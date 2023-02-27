@@ -127,7 +127,7 @@
     <select id="selectEmailMsg" resultMap="BaseResultMap"  parameterType="java.lang.String"  >
         select * from ATIP_ROUT_MACHINE_LOG_DATA_ERROR
         <where>
-             CREATETIME between DATEADD(hh, -50, GETDATE()) AND GETDATE()
+             CREATETIME between DATEADD(hh, -7, GETDATE()) AND GETDATE()
         </where>
     </select>
     <select id="selectEmailAdress" resultType="java.lang.String">

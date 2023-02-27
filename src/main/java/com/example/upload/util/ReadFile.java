@@ -70,11 +70,11 @@ public class ReadFile {
                     //获取日志时间信息
                     String[] timeDate = res[0].split("-");
                     //判断字符是否异常
-                    if (timeDate[0].length()>50) {
-                        String date = timeDate[0].substring(timeDate[0].length()-10);
+                    if (timeDate[0].length() > 50) {
+                        String date = timeDate[0].substring(timeDate[0].length() - 10);
                         String time = timeDate[1];
                         String num = res[1];
-                        check = checkLine(count, fileName,date, fileCount, time, msg, check);
+                        check = checkLine(count, fileName, date, fileCount, time, msg, check);
                         //不存在则加入新增列表中
                         if (check.isEmpty()) {
                             AtipRoutMachineLogData logData = new AtipRoutMachineLogData();
@@ -87,7 +87,7 @@ public class ReadFile {
                         } else {
                             break;
                         }
-                    }else {
+                    } else {
                         //获取日期
                         String date = timeDate[0];
                         //获取时间
@@ -96,7 +96,7 @@ public class ReadFile {
                         String num = res[1];
                         //检查是否是错误信息
                         if (msg.contains("CHECK FOR BBD TOOL") || msg.contains("BBD CHANGE TOOL") || msg.contains("TOOL BROKEN Z(X)")
-                                ||msg.contains("TOOL BROKEN WHEN PUT TOOL") || msg.indexOf("断刀")==0) {
+                                || msg.contains("TOOL BROKEN WHEN PUT TOOL") || msg.indexOf("断刀") == 0) {
                             AtipRoutMachineLogData errorMsg = new AtipRoutMachineLogData();
                             errorMsg.setFileName(fileName);
                             errorMsg.setDate(date);
@@ -104,7 +104,7 @@ public class ReadFile {
                             errorMsg.setMsg(msg);
                             readFile.logDataService.insertErrorMsg(errorMsg);
                         }
-                        check = checkLine(count,fileName, date, fileCount, time, msg, check);
+                        check = checkLine(count, fileName, date, fileCount, time, msg, check);
                         //不存在则加入新增列表中
                         if (check.isEmpty()) {
                             AtipRoutMachineLogData logData = new AtipRoutMachineLogData();
@@ -151,7 +151,7 @@ public class ReadFile {
                     //查询当前行数据是否已存在
                     List<String> check = new ArrayList<>();
                     //count =1 说明程序第一次运行
-                    check = checkLine(count,fileName, date, fileCount, time, msg, check);
+                    check = checkLine(count, fileName, date, fileCount, time, msg, check);
 //                      不存在则加入新增列表中
                     if (check.isEmpty()) {
                         AtipRoutMachineLogData logData = new AtipRoutMachineLogData();
@@ -186,14 +186,14 @@ public class ReadFile {
                         for (String line : reads) {
                             fileCount++;
                             String[] sp = line.split("\\s", 2);
-                            if (sp[0].length()>50) {
+                            if (sp[0].length() > 50) {
                                 //获取时间
-                                String[] res = sp[1].trim().split("\\s",2);
+                                String[] res = sp[1].trim().split("\\s", 2);
                                 String time = res[0];
                                 //获取msg
-                                String msg =res[1];
-                                check = readFile.logDataService.selectCheckMsg(filePrefix,time,msg,fileName);
-                                if (check.isEmpty()){
+                                String msg = res[1];
+                                check = readFile.logDataService.selectCheckMsg(filePrefix, time, msg, fileName);
+                                if (check.isEmpty()) {
                                     AtipRoutMachineLogData logData = new AtipRoutMachineLogData();
                                     logData.setDate(filePrefix);
                                     logData.setTime(time);
@@ -201,12 +201,12 @@ public class ReadFile {
                                     logData.setFileName(fileName);
                                     resList.add(logData);
                                 }
-                            }else {
+                            } else {
                                 String time = sp[0];
                                 //获取msg
                                 String msg = sp[1];
                                 if (fileCount == 1) {
-                                    check = readFile.logDataService.selectCheckMsg(filePrefix,time,msg,fileName);
+                                    check = readFile.logDataService.selectCheckMsg(filePrefix, time, msg, fileName);
                                     if (check.isEmpty()) {
                                         AtipRoutMachineLogData endLine = new AtipRoutMachineLogData();
                                         endLine.setDate(filePrefix);
@@ -223,7 +223,7 @@ public class ReadFile {
                                     } else {
                                         break;
                                     }
-                                }else {
+                                } else {
                                     AtipRoutMachineLogData logData = new AtipRoutMachineLogData();
                                     logData.setDate(filePrefix);
                                     logData.setTime(time);
@@ -246,7 +246,7 @@ public class ReadFile {
         //count =1 说明程序第一次运行
         if (count == 1) {
             if (fileCount == 1) {
-                check = readFile.logDataService.selectCheckMsg(date,time,msg,fileName);
+                check = readFile.logDataService.selectCheckMsg(date, time, msg, fileName);
                 AtipRoutMachineLogData endLine = new AtipRoutMachineLogData();
                 endLine.setDate(date);
                 endLine.setTime(time);
@@ -254,8 +254,8 @@ public class ReadFile {
                 endLine.setFileName(fileName);
                 readFile.logDataService.insertEndMsg(endLine);
             }
-        }else {
-            check = readFile.logDataService.selectCheckMsg(date,time,msg,fileName);
+        } else {
+            check = readFile.logDataService.selectCheckMsg(date, time, msg, fileName);
             if (fileCount == 1 && check.isEmpty()) {
                 AtipRoutMachineLogData endLine = new AtipRoutMachineLogData();
                 endLine.setDate(date);
