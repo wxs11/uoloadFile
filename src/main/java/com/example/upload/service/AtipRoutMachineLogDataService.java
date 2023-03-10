@@ -3,6 +3,7 @@ package com.example.upload.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.upload.entity.AtipRoutMachineLogData;
 
+import javax.mail.MessagingException;
 import java.util.List;
 
 /**
@@ -13,12 +14,12 @@ import java.util.List;
 public interface AtipRoutMachineLogDataService extends IService<AtipRoutMachineLogData> {
 
     /**
-     * description: 插入数据
+     * description: 插入压合机器日志
      * @date: 2023/2/7
      * @param: []
      * @return: void
      **/
-    void insertLogMsg();
+    void insertLogMsg() throws MessagingException;
 /**
  * description: 查询总数据表
  * @date: 2023/2/7
@@ -66,6 +67,36 @@ public interface AtipRoutMachineLogDataService extends IService<AtipRoutMachineL
      **/
 
     List<String> selectEmailAdress();
+
+    /**
+     * description: 插入钻孔机器日志
+     * @date: 2023/3/9
+     * @param: []
+     * @return: void
+     **/
+    void insertZkLog() throws MessagingException;
+
+    /**
+     * description: 查询钻孔记录对比表
+     * @date: 2023/2/7
+     * @param: [date, time, msg]
+     * @return: java.util.List<java.lang.String>
+     **/
+    List<String> selectZkCheckMsg(String date,String time,String msg,String fileName);
+    /**
+     * description:插入钻孔Error 日志
+     * @date: 2023/3/10
+     * @param: [logData]
+     * @return: boolean
+     **/
+    boolean insertZkErrorMsg(AtipRoutMachineLogData logData);
+    /**
+     * description: 插入钻孔尾行数据到对比表
+     * @date: 2023/3/10
+     * @param: [logData]
+     * @return: boolean
+     **/
+    boolean insertZkEndMgs(AtipRoutMachineLogData logData);
 
 
 }

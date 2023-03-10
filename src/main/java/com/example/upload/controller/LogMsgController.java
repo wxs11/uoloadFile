@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.mail.MessagingException;
 import java.util.List;
 
 /**
@@ -24,16 +25,32 @@ public class LogMsgController {
 
 
     /**
-     * description: 上传txt文档
+     * description: 上传压合机器日志
      * @date: 2022/11/18
      * @param: []
      * @return: com.example.upload.entity.ResultVO
      **/
     @PostMapping("/upload")
-    public void insert(){
+    public void insert() throws MessagingException {
         logDataService.insertLogMsg();
     }
 
+    /**
+     * description: 上传钻孔机器日志
+     * @date: 2023/3/9
+     * @param: []
+     * @return: void
+     **/
+    @PostMapping("/saveZk")
+    public void insertZkLog() throws MessagingException { logDataService.insertZkLog();}
+
+
+    /**
+     * description: 查询Error内容发送邮件
+     * @date: 2023/3/9
+     * @param: []
+     * @return: java.util.List<com.example.upload.entity.AtipRoutMachineLogData>
+     **/
     @PostMapping("/select")
     public List<AtipRoutMachineLogData> selectEmailMsg(){
         return  logDataService.selectEmailMsg();

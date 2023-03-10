@@ -14,7 +14,7 @@ import java.util.List;
 public interface AtipRoutMachineLogDataMapper extends BaseMapper<AtipRoutMachineLogData> {
 
     /**
-     * description:新增数据
+     * description:插入压合日志数据
      * @date: 2023/1/30
      * @param: [atipRoutMachineLogData]实体类
      * @return: boolean
@@ -45,7 +45,7 @@ public interface AtipRoutMachineLogDataMapper extends BaseMapper<AtipRoutMachine
     boolean insertEndMsg(AtipRoutMachineLogData atipRoutMachineLogData);
 
     /**
-     * description:插入Eroor Log信息
+     * description:插入Error Log信息
      * @date: 2023/2/17
      * @param: [logData]
      * @return: boolean
@@ -75,6 +75,49 @@ public interface AtipRoutMachineLogDataMapper extends BaseMapper<AtipRoutMachine
      * @return: java.util.List<java.lang.String>
      **/
     List<String> selectEmailAdress();
+    /**
+     * description: 插入钻孔日志数据
+     * @date: 2023/3/10
+     * @param: [atipRoutMachineLogData]
+     * @return: boolean
+     **/
+    boolean insertZkLogMsg(AtipRoutMachineLogData logData);
+
+    /**
+     * description:查询钻孔对比表数据
+     * @date: 2023/3/10
+     * @param: [date, time, msg]
+     * @return: java.util.List<java.lang.String>
+     **/
+    List<String> selectZkCheckMsg(String date,String time,String msg,String fileName);
+    /**
+     * description: 插入钻孔数据尾行到对比表
+     * @date: 2023/3/10
+     * @param: [logData]
+     * @return: boolean
+     **/
+    boolean insertZkEndMsg(AtipRoutMachineLogData logData);
+    /**
+     * description: 插入钻孔Error 日志
+     * @date: 2023/3/10
+     * @param: [logData]
+     * @return: boolean
+     **/
+    boolean insertZkErrorMsg(AtipRoutMachineLogData logData);
+    /**
+     * description: 查询钻孔Error邮件发送内容
+     * @date: 2023/3/10
+     * @param: []
+     * @return: java.util.List<com.example.upload.entity.AtipRoutMachineLogData>
+     **/
+    List<AtipRoutMachineLogData> selectZkEmailMsg();
+    /**
+     * description: 查询钻孔邮件地址
+     * @date: 2023/3/10
+     * @param: []
+     * @return: java.util.List<java.lang.String>
+     **/
+    List<String> selectZkEmailAdress();
 }
 
 
